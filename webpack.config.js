@@ -1,6 +1,7 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import webpack from 'webpack';
 
-module.exports = {
+export default {
   mode: process.env.NODE_ENV || 'development',
   module: {
     rules: [
@@ -17,7 +18,19 @@ module.exports = {
       { test: /\.css$/, use: ['style-loader', 'css-loader', 'postcss-loader'] },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader'],
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                quietDeps: true, // Отключение предупреждений в sass-loader
+              },
+            },
+          },
+          'postcss-loader',
+        ],
       },
       {
         test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -31,10 +44,23 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'template.html',
+      template: 'index.html',
+    }),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /bootstrap/,
     }),
   ],
   output: {
     clean: true,
+  },
+  devServer: {
+    static: './dist',
+    open: true,
+    hot: true,
+    port: 8080,
+  },
+  stats: {
+    warnings: false,
+    warningsFilter: [/Deprecation Warning/],
   },
 };
