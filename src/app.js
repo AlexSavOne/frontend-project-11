@@ -1,15 +1,21 @@
 // src/app.js
+
+import fetchRSS from './fetchRSS.js';
+import parseRSS from './parseRSS.js';
+import i18next from './locales/i18n.js';
 import createSchema from './validation.js';
 import createView from './view.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
 
-const app = () => {
-  console.log('Приложение запущено'); // Лог запуска приложения
+console.log('Bootstrap loaded');
+
+const app = async () => {
+  await i18next.init();
+  console.log('i18next initialized');
 
   const state = {
-    form: {
-      status: 'idle',
-      error: null,
-    },
+    form: { status: 'idle', error: null },
     feeds: [],
   };
 
@@ -17,39 +23,68 @@ const app = () => {
     form: document.querySelector('.rss-form'),
     input: document.querySelector('#url-input'),
     feedback: document.querySelector('.div_p-example'),
+    feedsList: document.querySelector('.feeds'),
+    postsList: document.querySelector('.posts'),
+    modal: document.querySelector('#modal'),
+    modalTitle: document.querySelector('.modal-title'),
+    modalBody: document.querySelector('.modal-body'),
+    modalLink: document.querySelector('.full-article'),
   };
-
-  console.log('Элементы формы:', elements); // Проверка наличия элементов
-
-  // Проверяем, есть ли элементы формы
-  if (!elements.form || !elements.input || !elements.feedback) {
-    console.error('Не удалось найти элементы формы!'); // Лог ошибки
-    return;
-  }
 
   const watchedState = createView(state, elements);
 
-  elements.form.addEventListener('submit', (e) => {
+  const schema = createSchema(state.feeds.map(feed => feed.url));
+
+  elements.form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const { value } = elements.input;
-    console.log('Отправка формы с URL:', value); // Лог введенного URL
+    console.log('Form submitted with URL:', value);
 
-    const schema = createSchema(state.feeds);
+    try {
+      const validationResult = await schema.validate({ url: value });
+      console.log('Validation successful:', validationResult);
+    } catch (validationError) {
+      console.log('Form validation error:', validationError);
+      watchedState.form.error = validationError.message;
+      watchedState.form.status = 'invalid';
+      return;
+    }
 
-    schema
-      .validate(value)
-      .then((url) => {
-        console.log('Валидация прошла успешно:', url); // Лог успешной валидации
-        watchedState.form.status = 'valid';
-        state.feeds.push(url);
-        console.log('Обновленный список фидов:', state.feeds); // Лог добавленного URL
+    fetchRSS(value)
+      .then((rssText) => {
+        if (!rssText) {
+          throw new Error('Некорректный ответ от сервера');
+        }
+        console.log('RSS fetched successfully');
+        const { title, description, posts } = parseRSS(rssText);
+        console.log('Parsed RSS data:', { title, description, posts });
+
+        const feed = { id: Date.now(), title, description, posts };
+        state.feeds.push(feed);
+
         watchedState.form.status = 'submitted';
+        watchedState.feeds = [...state.feeds]; // Обновляем состояние через watchedState
       })
       .catch((err) => {
-        console.log('Ошибка валидации:', err.message); // Лог ошибки валидации
-        watchedState.form.error = err.message;
+        console.error('Error fetching RSS:', err);
+        watchedState.form.error = i18next.t('validate.networkError');
         watchedState.form.status = 'invalid';
       });
+  });
+
+  elements.feedsList.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      const postLink = e.target.href;
+      const postTitle = e.target.textContent;
+
+      console.log('Opening post modal with:', postTitle, postLink);
+
+      elements.modalTitle.textContent = postTitle;
+      elements.modalBody.textContent = `Ссылка: ${postLink}`;
+      elements.modalLink.href = postLink;
+      const modal = new bootstrap.Modal(elements.modal);
+      modal.show();
+    }
   });
 };
 

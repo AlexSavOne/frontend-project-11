@@ -1,5 +1,4 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import webpack from 'webpack';
 
 export default {
   mode: process.env.NODE_ENV || 'development',
@@ -46,9 +45,6 @@ export default {
     new HtmlWebpackPlugin({
       template: 'index.html',
     }),
-    new webpack.IgnorePlugin({
-      resourceRegExp: /bootstrap/,
-    }),
   ],
   output: {
     clean: true,
@@ -63,4 +59,5 @@ export default {
     warnings: false,
     warningsFilter: [/Deprecation Warning/],
   },
+  devtool: 'source-map', // Для удобства отладки
 };

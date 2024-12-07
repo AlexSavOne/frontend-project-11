@@ -15,6 +15,12 @@
 ./postcss.config.js
 ./README.md
 ./src/app.js
+./src/fetchRSS.js
 ./src/index.js
+./src/locales/i18n.js
+./src/locales/ru.js
+./src/parseRSS.js
 ./src/styles.scss
+./src/validation.js
+./src/view.js
 ./webpack.config.js
