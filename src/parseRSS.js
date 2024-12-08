@@ -19,8 +19,6 @@ const parseRSS = (rssText) => {
   const title = channel.querySelector('title')?.textContent || 'Без названия канала';
   const description = channel.querySelector('description')?.textContent || 'Без описания';
 
-  console.log('Parsed RSS:', { title, description, posts }); // Лог парсинга RSS
-
   return { title, description, posts };
 };
 

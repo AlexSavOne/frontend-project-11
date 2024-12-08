@@ -4,16 +4,12 @@ import i18next from 'i18next';
 import ru from './ru.js';
 
 i18next.init({
-  lng: 'ru', // Устанавливаем язык
+  lng: 'ru',
   resources: {
     ru: {
-      translation: ru.translation, // Исправляем путь к переводам
+      translation: ru.translation,
     },
   },
-}).then(() => {
-  console.log('i18next инициализирован');
-  console.log('Текущий язык:', i18next.language); // Лог текущего языка
-  console.log('Перевод для "RSS агрегатор":', i18next.t('rssAggregator')); // Пример перевода
 }).catch((error) => {
   console.error('Ошибка инициализации i18next:', error);
 });

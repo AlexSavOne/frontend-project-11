@@ -1,12 +1,9 @@
 // src/view.js
-
 import onChange from 'on-change';
 
 const createView = (state, elements) => onChange(state, (path, value) => {
   if (path === 'form.status') {
     const { input, feedback } = elements;
-
-    console.log(`Form status changed: ${value}`);
 
     if (value === 'invalid') {
       input.classList.add('is-invalid');
@@ -26,34 +23,39 @@ const createView = (state, elements) => onChange(state, (path, value) => {
   }
 
   if (path === 'feeds') {
-    const feedsList = elements.feedsList;
+    const { feedsList, postsList } = elements;
+
     feedsList.innerHTML = '';
-    console.log('Rendering feeds:', value);
+    postsList.innerHTML = '';
+
     value.forEach((feed) => {
-      console.log('Rendering feed:', feed);
-
-      const feedElement = document.createElement('div');
-      feedElement.classList.add('card', 'mb-3');
-
-      feedElement.innerHTML = `
-        <div class="card-body">
-          <h5 class="card-title">${feed.title}</h5>
-          <p class="card-text">${feed.description}</p>
-          <a href="#" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#feed-${feed.id}" aria-expanded="false" aria-controls="feed-${feed.id}">
-            Смотреть посты
-          </a>
-          <div class="collapse" id="feed-${feed.id}">
-            <ul class="list-group list-group-flush">
-              ${feed.posts.map(post => `
-                <li class="list-group-item">
-                  <a href="${post.link}" target="_blank" class="text-decoration-none">${post.title}</a>
-                </li>`).join('')}
-            </ul>
+      feedsList.insertAdjacentHTML('beforeend', `
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">${feed.title}</h5>
+            <p class="card-text">${feed.description}</p>
           </div>
         </div>
-      `;
+      `);
 
-      feedsList.appendChild(feedElement);
+      const postsHtml = feed.posts.map((post) => {
+        const isRead = state.readPosts.has(post.id);
+        return `
+          <li class="list-group-item ${isRead ? 'fw-normal' : 'fw-bold'}" data-id="${post.id}">
+            <a href="${post.link}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">${post.title}</a>
+            <button type="button" class="btn btn-outline-primary btn-sm preview-button" data-id="${post.id}" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>
+          </li>
+        `;
+      }).join('');
+
+      postsList.insertAdjacentHTML('beforeend', `
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">${feed.title}</h5>
+            <ul class="list-group list-group-flush">${postsHtml}</ul>
+          </div>
+        </div>
+      `);
     });
   }
 });
