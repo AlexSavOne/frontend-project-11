@@ -1,5 +1,4 @@
 // src/app.js
-
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
 import i18next from '../locales/i18n.js';
@@ -13,13 +12,12 @@ import updateFeeds from './updateFeeds.js';
 
 const app = async () => {
   await i18next.init();
-
   const state = createState();
 
   const elements = {
     form: document.querySelector('.rss-form'),
     input: document.querySelector('#url-input'),
-    feedback: document.querySelector('.div_p-example'),
+    feedback: document.querySelector('.feedback'),
     feedsList: document.querySelector('.feeds'),
     postsList: document.querySelector('.posts'),
     modal: document.querySelector('#modal'),
@@ -29,7 +27,6 @@ const app = async () => {
   };
 
   const watchedState = createView(state, elements);
-
   updateFeeds(state, fetchRSS, parseRSS);
 
   elements.form.addEventListener('submit', async (e) => {
@@ -39,38 +36,27 @@ const app = async () => {
 
     try {
       await schema.validate({ url: value });
-    } catch (validationError) {
-      watchedState.form.error = validationError.message;
-      watchedState.form.status = 'invalid';
-      return;
-    }
+      const rssText = await fetchRSS(value);
+      const { title, description, posts } = parseRSS(rssText);
 
-    fetchRSS(value)
-      .then((rssText) => {
-        const { title, description, posts } = parseRSS(rssText);
+      const feedId = Date.now().toString();
+      const feed = {
+        id: feedId, title, description, posts, url: value,
+      };
+      state.feeds.push(feed);
 
-        const feed = {
-          id: Date.now(),
-          title,
-          description,
-          posts,
-          url: value,
-        };
-
-        state.feeds.push(feed);
-
-        posts.forEach((post) => {
-          state.posts.push({ ...post, id: `${feed.id}-${post.title}` });
-        });
-
-        watchedState.form.status = 'submitted';
-        watchedState.feeds = [...state.feeds];
-        watchedState.posts = [...state.posts];
-      })
-      .catch(() => {
-        watchedState.form.error = i18next.t('validate.networkError');
-        watchedState.form.status = 'invalid';
+      posts.forEach((post, index) => {
+        const postId = `${feedId}-${index}`;
+        state.posts.push({ ...post, id: postId });
       });
+
+      watchedState.form.status = 'submitted';
+      watchedState.feeds = [...state.feeds];
+      watchedState.posts = [...state.posts];
+    } catch (error) {
+      watchedState.form.error = error.message || i18next.t('validate.networkError');
+      watchedState.form.status = 'invalid';
+    }
   });
 
   elements.postsList.addEventListener('click', (e) => {
