@@ -1,4 +1,5 @@
 // src/view.js
+
 import onChange from 'on-change';
 
 const createView = (state, elements) => onChange(state, (path, value) => {

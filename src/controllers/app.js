@@ -1,11 +1,11 @@
 // src/app.js
 
-import fetchRSS from './fetchRSS.js';
-import parseRSS from './parseRSS.js';
-import i18next from './locales/i18n.js';
-import createSchema from './validation.js';
-import createView from './view.js';
-import { createState, markPostAsRead } from './model.js';
+import fetchRSS from '../models/fetchRSS.js';
+import parseRSS from '../models/parseRSS.js';
+import i18next from '../locales/i18n.js';
+import createSchema from '../models/validation.js';
+import createView from '../views/view.js';
+import { createState, markPostAsRead } from '../models/model.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import handlePostPreview from './modal.js';
