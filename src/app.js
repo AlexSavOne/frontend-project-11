@@ -54,7 +54,7 @@ const app = async () => {
           title,
           description,
           posts,
-          url: value
+          url: value,
         };
 
         state.feeds.push(feed);
