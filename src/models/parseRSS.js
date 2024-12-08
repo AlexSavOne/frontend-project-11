@@ -1,4 +1,5 @@
 // src/parseRSS.js
+
 const parseRSS = (rssText) => {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(rssText, 'text/xml');
@@ -11,7 +12,7 @@ const parseRSS = (rssText) => {
   const posts = Array.from(items).map((item) => {
     const title = item.querySelector('title')?.textContent || 'Без заголовка';
     const link = item.querySelector('link')?.textContent || '#';
-    const description = item.querySelector('description')?.textContent || 'Без описания';
+    const description = item.querySelector('description')?.textContent || 'Без описания'; // Фолбэк для описания
     return { title, link, description };
   });
 

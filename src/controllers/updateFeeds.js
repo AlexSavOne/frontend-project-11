@@ -9,27 +9,25 @@ const updateFeeds = (state, fetchRSS, parseRSS) => {
         .then((rssText) => {
           const { posts } = parseRSS(rssText);
 
-          // Проверяем, есть ли новые посты
           const existingPostLinks = new Set(feed.posts.map((post) => post.link));
           const newPosts = posts.filter((post) => !existingPostLinks.has(post.link));
 
           if (newPosts.length > 0) {
-            feed.posts.push(...newPosts); // Добавляем новые посты в фид
-            console.log(`Найдены новые посты для фида ${id}:`, newPosts);
+            feed.posts.push(...newPosts);
+            console.log(`%cНайдены новые посты для фида ${id}:`, 'color: #98c7c2; font-weight: bold;', newPosts);
           }
         })
         .catch((err) => {
-          console.error(`Ошибка обновления фида ${id}:`, err);
+          console.log(`%cОшибка обновления фида ${id}:`, 'color: #e08d63; font-weight: bold;', err);
         });
     });
 
-    // После выполнения всех запросов повторяем проверку через 5 секунд
     Promise.all(promises).finally(() => {
+      console.log('%cПроверка фидов завершена, повтор через 5 секунд', 'color: #add8e6; font-weight: bold;');
       setTimeout(checkFeeds, 5000);
     });
   };
 
-  // Запускаем первый цикл проверки
   checkFeeds();
 };
 

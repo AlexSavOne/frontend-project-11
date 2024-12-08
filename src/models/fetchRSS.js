@@ -13,7 +13,7 @@ const fetchRSS = async (url) => {
     }
     return response.data.contents;
   } catch (error) {
-    console.error('Ошибка сети или прокси:', error);
+    console.log('%cОшибка сети или прокси:', 'color: #e08d63; font-weight: bold;', error);
     throw new Error('Ошибка сети или прокси');
   }
 };
