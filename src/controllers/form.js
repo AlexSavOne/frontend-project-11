@@ -5,11 +5,14 @@ import createSchema from '../models/validation.js';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
 import i18next from '../locales/i18n.js';
+import { showLoader, hideLoader } from '../utils/loader.js';
 
 const handleFormSubmit = async (e, state, elements, watchedState) => {
   e.preventDefault();
   const { value } = elements.input;
   const schema = createSchema(state.feeds.map((feed) => feed.url));
+
+  showLoader();
 
   try {
     await schema.validate({ url: value });
@@ -44,6 +47,8 @@ const handleFormSubmit = async (e, state, elements, watchedState) => {
 
     console.error('Ошибка при валидации или получении данных RSS:', error.message);
     return updatedWatchedState;
+  } finally {
+    hideLoader();
   }
 };
 
