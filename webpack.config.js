@@ -54,6 +54,7 @@ export default {
     open: true,
     hot: true,
     port: 8080,
+    historyApiFallback: true, // для обработки HTML5 History API
   },
   stats: {
     warnings: false,

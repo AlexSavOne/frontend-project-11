@@ -1,7 +1,7 @@
 // src\index.js
 
-import './styles.scss';
+import './assets/styles.scss';
 import 'bootstrap';
-import app from './app.js';
+import app from './controllers/app.js';
 
 app();
