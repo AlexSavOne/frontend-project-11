@@ -8,57 +8,57 @@ import i18next from '../locales/i18n.js';
 import { showLoader, hideLoader } from '../utils/loader.js';
 import { showFeedbackMessage } from './ui.js';
 
-const handleFormSubmit = async (e, state, elements, watchedState) => {
+const handleFormSubmit = (e, state, elements, watchedState) => {
   e.preventDefault();
   const { value } = elements.input;
   const schema = createSchema(state.feeds.map((feed) => feed.url));
 
   showLoader();
 
-  try {
-    await schema.validate({ url: value });
+  schema
+    .validate({ url: value })
+    .then(() => {
+      elements.input.classList.remove('is-invalid');
+      return fetchRSS(value);
+    })
+    .then((rssText) => {
+      const { title, description, posts } = parseRSS(rssText);
 
-    elements.input.classList.remove('is-invalid');
+      const feedId = Date.now().toString();
+      const feed = {
+        id: feedId, title, description, posts, url: value,
+      };
 
-    const rssText = await fetchRSS(value);
-    const { title, description, posts } = parseRSS(rssText);
+      state.feeds.push(feed);
+      posts.forEach((post, index) => {
+        const postId = `${feedId}-${index}`;
+        state.posts.push({ ...post, id: postId });
+      });
 
-    const feedId = Date.now().toString();
-    const feed = {
-      id: feedId, title, description, posts, url: value,
-    };
+      const updatedWatchedState = onChange(watchedState, () => { });
+      updatedWatchedState.form.status = 'submitted';
+      updatedWatchedState.feeds = [...state.feeds];
+      updatedWatchedState.posts = [...state.posts];
 
-    state.feeds.push(feed);
-    posts.forEach((post, index) => {
-      const postId = `${feedId}-${index}`;
-      state.posts.push({ ...post, id: postId });
+      showFeedbackMessage(elements, i18next.t('validate.successURL'), false);
+    })
+    .catch((error) => {
+      elements.input.classList.add('is-invalid');
+
+      const updatedWatchedState = onChange(watchedState, () => { });
+      updatedWatchedState.form = {
+        ...watchedState.form,
+        error: error.message || i18next.t('validate.networkError'),
+        status: 'invalid',
+      };
+
+      showFeedbackMessage(elements, updatedWatchedState.form.error, true);
+
+      console.error('Ошибка при валидации или получении данных RSS:', error.message);
+    })
+    .finally(() => {
+      hideLoader();
     });
-
-    const updatedWatchedState = onChange(watchedState, () => { });
-    updatedWatchedState.form.status = 'submitted';
-    updatedWatchedState.feeds = [...state.feeds];
-    updatedWatchedState.posts = [...state.posts];
-
-    showFeedbackMessage(elements, i18next.t('validate.successURL'), false);
-
-    return updatedWatchedState;
-  } catch (error) {
-    elements.input.classList.add('is-invalid');
-
-    const updatedWatchedState = onChange(watchedState, () => { });
-    updatedWatchedState.form = {
-      ...watchedState.form,
-      error: error.message || i18next.t('validate.networkError'),
-      status: 'invalid',
-    };
-
-    showFeedbackMessage(elements, updatedWatchedState.form.error, true);
-
-    console.error('Ошибка при валидации или получении данных RSS:', error.message);
-    return updatedWatchedState;
-  } finally {
-    hideLoader();
-  }
 };
 
 export default handleFormSubmit;

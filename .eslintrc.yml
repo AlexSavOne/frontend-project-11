@@ -1,12 +1,31 @@
+---
+root: true
+
+plugins:
+  - "@html-eslint"
+
 env:
-  browser: true
-  es2021: true
   node: true
   jest: true
+  browser: true
+
 extends:
   - "airbnb-base"
-  - "plugin:jest/recommended"
-parserOptions:
-  ecmaVersion: latest
-  sourceType: module
-rules: {}
+
+rules:
+  no-console: 0
+  import/extensions: 0
+  no-param-reassign: 0
+  no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]
+  "@html-eslint/indent":
+    - "error"
+    - 2
+
+overrides:
+  - files: "*.html"
+    parser: "@html-eslint/parser"
+    extends:
+      - "plugin:@html-eslint/recommended"
+  - files: "*.html"
+    rules:
+      max-len: off
