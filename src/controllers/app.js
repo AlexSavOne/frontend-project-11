@@ -1,5 +1,3 @@
-// src/controllers/app.js
-
 import i18next from '../locales/i18n.js';
 import createView from '../views/view.js';
 import { createState, markPostAsRead } from '../models/model.js';
@@ -36,7 +34,6 @@ const app = async () => {
     if (isValid) {
       clearInputField(elements);
       hideExampleText(elements);
-      console.log('Данные о постах и канале успешно обновлены');
     }
   });
 
@@ -48,8 +45,6 @@ const app = async () => {
     handlePostPreview(state, elements, postId);
     markPostAsRead(state, postId);
     watchedState.readPosts = new Set(state.readPosts);
-
-    console.log('Просмотр поста с id:', postId);
   });
 };
 

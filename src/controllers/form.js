@@ -1,5 +1,3 @@
-// src/controllers/form.js
-
 import onChange from 'on-change';
 import createSchema from '../models/validation.js';
 import fetchRSS from '../models/fetchRSS.js';
@@ -42,7 +40,6 @@ const handleFormSubmit = async (e, state, elements, watchedState) => {
     updatedWatchedState.posts = [...state.posts];
 
     showFeedbackMessage(elements, i18next.t('validate.successURL'), false);
-    console.log('RSS успешно загружен:', value);
 
     return updatedWatchedState;
   } catch (error) {
@@ -56,9 +53,6 @@ const handleFormSubmit = async (e, state, elements, watchedState) => {
     };
 
     showFeedbackMessage(elements, updatedWatchedState.form.error, true);
-
-    console.error('Ошибка при валидации или получении данных RSS:', error.message);
-    console.log('Ошибка при отправке формы:', error.message);
 
     return updatedWatchedState;
   }

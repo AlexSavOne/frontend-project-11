@@ -1,5 +1,3 @@
-// src/fetchRSS.js
-
 import axios from 'axios';
 
 const fetchRSS = async (url) => {
@@ -12,8 +10,7 @@ const fetchRSS = async (url) => {
       throw new Error('Пустой ответ от сервера');
     }
     return response.data.contents;
-  } catch (error) {
-    console.log('%cОшибка сети или прокси:', 'color: #e08d63; font-weight: bold;', error);
+  } catch {
     throw new Error('Ошибка сети или прокси');
   }
 };

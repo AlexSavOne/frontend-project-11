@@ -1,5 +1,3 @@
-// src/utils/loader.js
-
 export const showLoader = () => {
   const loader = document.querySelector('#loader');
   if (loader) {
@@ -16,7 +14,6 @@ export const hideLoader = () => {
   }
 };
 
-// Новая утилита для обёртки с лоадером
 export const withLoader = async (callback) => {
   showLoader();
   try {

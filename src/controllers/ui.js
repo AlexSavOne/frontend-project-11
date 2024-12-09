@@ -1,5 +1,3 @@
-// src/controllers/ui.js
-
 const showFeedbackMessage = (elements, message, isError = false) => {
   const { exampleText } = elements;
 
@@ -15,8 +13,6 @@ const showFeedbackMessage = (elements, message, isError = false) => {
     feedback.textContent = message;
 
     exampleText.parentNode.insertBefore(feedback, exampleText.nextSibling);
-  } else {
-    console.error('Элемент с классом .mt-2.mb-0.text-muted не найден');
   }
 };
 
@@ -30,8 +26,6 @@ const hideExampleText = (elements) => {
 
   if (exampleText) {
     exampleText.style.opacity = '0';
-  } else {
-    console.error('Элемент с классом .mt-2.mb-0.text-muted не найден');
   }
 };
 

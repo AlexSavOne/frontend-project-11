@@ -1,5 +1,3 @@
-// src/views/view.js
-
 import onChange from 'on-change';
 
 const createView = (state, elements) => onChange(state, (path, value) => {
@@ -47,8 +45,6 @@ const createView = (state, elements) => onChange(state, (path, value) => {
     postsHeader.classList.add('card-body');
     postsHeader.innerHTML = '<h2 class="card-title h4">Посты</h2>';
     postsList.insertAdjacentElement('afterbegin', postsHeader);
-
-    console.log('%cОтображение данных о каналах и постах обновлено', 'color: #7f9c5c; font-weight: bold;');
   }
 });
 
