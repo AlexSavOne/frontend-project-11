@@ -5,22 +5,24 @@ import createSchema from '../models/validation.js';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
 import i18next from '../locales/i18n.js';
-import { showLoader, hideLoader } from '../utils/loader.js';
 import { showFeedbackMessage } from './ui.js';
+import { withLoader } from '../utils/loader.js';
 
 const handleFormSubmit = async (e, state, elements, watchedState) => {
   e.preventDefault();
   const { value } = elements.input;
   const schema = createSchema(state.feeds.map((feed) => feed.url));
 
-  showLoader();
-
   try {
+    if (!value.trim()) {
+      throw new Error(i18next.t('validate.shouldNotBeEmpty'));
+    }
+
     await schema.validate({ url: value });
 
     elements.input.classList.remove('is-invalid');
 
-    const rssText = await fetchRSS(value);
+    const rssText = await withLoader(() => fetchRSS(value));
     const { title, description, posts } = parseRSS(rssText);
 
     const feedId = Date.now().toString();
@@ -40,6 +42,7 @@ const handleFormSubmit = async (e, state, elements, watchedState) => {
     updatedWatchedState.posts = [...state.posts];
 
     showFeedbackMessage(elements, i18next.t('validate.successURL'), false);
+    console.log('RSS успешно загружен:', value);
 
     return updatedWatchedState;
   } catch (error) {
@@ -55,9 +58,9 @@ const handleFormSubmit = async (e, state, elements, watchedState) => {
     showFeedbackMessage(elements, updatedWatchedState.form.error, true);
 
     console.error('Ошибка при валидации или получении данных RSS:', error.message);
+    console.log('Ошибка при отправке формы:', error.message);
+
     return updatedWatchedState;
-  } finally {
-    hideLoader();
   }
 };
 

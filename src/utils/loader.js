@@ -15,3 +15,13 @@ export const hideLoader = () => {
     loader.classList.add('d-none');
   }
 };
+
+// Новая утилита для обёртки с лоадером
+export const withLoader = async (callback) => {
+  showLoader();
+  try {
+    return await callback();
+  } finally {
+    hideLoader();
+  }
+};

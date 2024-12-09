@@ -9,6 +9,7 @@ import { clearInputField, hideExampleText } from './ui.js';
 import handlePostPreview from './modal.js';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
+import { withLoader } from '../utils/loader.js';
 
 const app = async () => {
   await i18next.init();
@@ -27,7 +28,8 @@ const app = async () => {
   };
 
   const watchedState = createView(state, elements);
-  updateFeeds(state, fetchRSS, parseRSS);
+
+  await withLoader(() => updateFeeds(state, fetchRSS, parseRSS));
 
   elements.form.addEventListener('submit', async (e) => {
     const isValid = await handleFormSubmit(e, state, elements, watchedState);
