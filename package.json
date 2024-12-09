@@ -12,8 +12,7 @@
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production",
-    "dev": "npx webpack serve",
-    "install": "npm ci"
+    "dev": "npx webpack serve"
   },
   "keywords": [],
   "author": "AlexSav",
