@@ -5,8 +5,11 @@ const showFeedbackMessage = (elements, message, isError = false) => {
   const { exampleText } = elements;
 
   if (exampleText) {
-    // Скрываем старое сообщение с помощью opacity
-    exampleText.style.opacity = '0';
+    // Удаляем старое сообщение (если оно есть)
+    const oldFeedback = exampleText.parentNode.querySelector('.feedback');
+    if (oldFeedback) {
+      oldFeedback.remove();
+    }
 
     // Создаем новый элемент сообщения
     const feedback = document.createElement('p');

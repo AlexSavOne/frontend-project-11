@@ -5,7 +5,7 @@ import createView from '../views/view.js';
 import { createState, markPostAsRead } from '../models/model.js';
 import updateFeeds from './updateFeeds.js';
 import handleFormSubmit from './form.js';
-import { showFeedbackMessage, clearInputField, hideExampleText } from './ui.js';
+import { clearInputField, hideExampleText } from './ui.js';
 import handlePostPreview from './modal.js';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
@@ -32,7 +32,6 @@ const app = async () => {
   elements.form.addEventListener('submit', async (e) => {
     const isValid = await handleFormSubmit(e, state, elements, watchedState);
     if (isValid) {
-      showFeedbackMessage(elements);
       clearInputField(elements);
       hideExampleText(elements);
       console.log('Данные о постах и канале успешно обновлены');
