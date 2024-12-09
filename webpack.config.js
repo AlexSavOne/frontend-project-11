@@ -56,9 +56,15 @@ export default {
     port: 8080,
     historyApiFallback: true, // для обработки HTML5 History API
   },
-  stats: {
-    warnings: false,
-    warningsFilter: [/Deprecation Warning/],
+  ignoreWarnings: [
+    /Deprecation Warning/, // Устранение устаревших предупреждений
+  ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+    usedExports: true,
+    minimize: true,
   },
   devtool: 'source-map', // Для удобства отладки
 };
