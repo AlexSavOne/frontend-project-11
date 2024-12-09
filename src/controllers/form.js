@@ -16,8 +16,9 @@ const handleFormSubmit = async (e, state, elements, watchedState) => {
   showLoader();
 
   try {
-    // Выполнение валидации URL
     await schema.validate({ url: value });
+
+    elements.input.classList.remove('is-invalid');
 
     const rssText = await fetchRSS(value);
     const { title, description, posts } = parseRSS(rssText);
@@ -38,11 +39,12 @@ const handleFormSubmit = async (e, state, elements, watchedState) => {
     updatedWatchedState.feeds = [...state.feeds];
     updatedWatchedState.posts = [...state.posts];
 
-    // Показать сообщение об успешной загрузке RSS
     showFeedbackMessage(elements, i18next.t('validate.successURL'), false);
 
     return updatedWatchedState;
   } catch (error) {
+    elements.input.classList.add('is-invalid');
+
     const updatedWatchedState = onChange(watchedState, () => { });
     updatedWatchedState.form = {
       ...watchedState.form,
@@ -50,7 +52,6 @@ const handleFormSubmit = async (e, state, elements, watchedState) => {
       status: 'invalid',
     };
 
-    // Показать сообщение об ошибке
     showFeedbackMessage(elements, updatedWatchedState.form.error, true);
 
     console.error('Ошибка при валидации или получении данных RSS:', error.message);
