@@ -24,7 +24,7 @@ export default {
             loader: 'sass-loader',
             options: {
               sassOptions: {
-                quietDeps: true, // Отключение предупреждений в sass-loader
+                quietDeps: true,
               },
             },
           },
@@ -54,10 +54,10 @@ export default {
     open: true,
     hot: true,
     port: 8080,
-    historyApiFallback: true, // для обработки HTML5 History API
+    historyApiFallback: true,
   },
   ignoreWarnings: [
-    /Deprecation Warning/, // Устранение устаревших предупреждений
+    /Deprecation Warning/,
   ],
   optimization: {
     splitChunks: {
@@ -66,5 +66,5 @@ export default {
     usedExports: true,
     minimize: true,
   },
-  devtool: 'source-map', // Для удобства отладки
+  devtool: 'source-map',
 };

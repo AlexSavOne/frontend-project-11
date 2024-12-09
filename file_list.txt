@@ -16,7 +16,9 @@
 ./README.md
 ./src/assets/styles.scss
 ./src/controllers/app.js
+./src/controllers/form.js
 ./src/controllers/modal.js
+./src/controllers/ui.js
 ./src/controllers/updateFeeds.js
 ./src/index.js
 ./src/locales/i18n.js
@@ -25,5 +27,6 @@
 ./src/models/model.js
 ./src/models/parseRSS.js
 ./src/models/validation.js
+./src/utils/loader.js
 ./src/views/view.js
 ./webpack.config.js
