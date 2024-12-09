@@ -6,10 +6,8 @@ const updateFeeds = (state, fetchRSS, parseRSS) => {
       return fetchRSS(url)
         .then((rssText) => {
           const { posts } = parseRSS(rssText);
-
           const existingPostLinks = new Set(feed.posts.map((post) => post.link));
           const newPosts = posts.filter((post) => !existingPostLinks.has(post.link));
-
           if (newPosts.length > 0) {
             feed.posts.push(...newPosts);
           }

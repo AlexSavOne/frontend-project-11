@@ -14,11 +14,11 @@ export const hideLoader = () => {
   }
 };
 
-export const withLoader = async (callback) => {
+export const withLoader = (callback) => {
   showLoader();
-  try {
-    return await callback();
-  } finally {
-    hideLoader();
-  }
+  return Promise.resolve()
+    .then(() => callback())
+    .finally(() => {
+      hideLoader();
+    });
 };
