@@ -12,14 +12,16 @@ const createView = (state, elements) => onChange(state, (path, value) => {
     feedsList.appendChild(feedsHeader);
 
     value.forEach((feed) => {
-      feedsList.insertAdjacentHTML('beforeend', `
-        <div class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title">${feed.title}</h5>
-            <p class="card-text">${feed.description}</p>
+      if (!feedsList.querySelector(`[data-id="${feed.id}"]`)) {
+        feedsList.insertAdjacentHTML('beforeend', `
+          <div class="card mb-3" data-id="${feed.id}">
+            <div class="card-body">
+              <h5 class="card-title">${feed.title}</h5>
+              <p class="card-text">${feed.description}</p>
+            </div>
           </div>
-        </div>
-      `);
+        `);
+      }
 
       const postsHtml = feed.posts.map((post, index) => {
         const postClass = state.readPosts.has(post.id) ? 'fw-normal' : 'fw-bold';
@@ -31,14 +33,16 @@ const createView = (state, elements) => onChange(state, (path, value) => {
         `;
       }).join('');
 
-      postsList.insertAdjacentHTML('beforeend', `
-        <div class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title">${feed.title}</h5>
-            <ul class="list-group list-group-flush">${postsHtml}</ul>
+      if (!postsList.querySelector(`[data-id="${feed.id}"]`)) {
+        postsList.insertAdjacentHTML('beforeend', `
+          <div class="card mb-3" data-id="${feed.id}">
+            <div class="card-body">
+              <h5 class="card-title">${feed.title}</h5>
+              <ul class="list-group list-group-flush">${postsHtml}</ul>
+            </div>
           </div>
-        </div>
-      `);
+        `);
+      }
     });
 
     const postsHeader = document.createElement('div');

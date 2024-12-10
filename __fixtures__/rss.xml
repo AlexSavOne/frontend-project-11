@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Новые уроки на Хекслете</title>
+    <description>Практические уроки по программированию</description>
+    <link>https://ru.hexlet.io/</link>
+    <webMaster>info@hexlet.io</webMaster>
+    <item>
+      <title>События на практике / JS: DOM API</title>
+      <guid isPermaLink="false">1798</guid>
+      <link>https://ru.hexlet.io/courses/js-dom/lessons/events-in-action/theory_unit</link>
+      <description>Цель: Научиться создавать интерактивные компоненты</description>
+      <pubDate>Thu, 09 Jul 2020 23:59:07 -0400</pubDate>
+    </item>
+    <item>
+      <title>Работа с сеткой / CSS: Grid</title>
+      <guid isPermaLink="false">1796</guid>
+      <link>https://ru.hexlet.io/courses/css-grid/lessons/grid-property/theory_unit</link>
+      <description>Цель: Изучить отступы между полосами и выравнивание полос сетки.</description>
+      <pubDate>Tue, 30 Jun 2020 13:59:42 -0400</pubDate>
+    </item>
+    <item>
+      <title>Расположение элементов в сетке / CSS: Grid</title>
+      <guid isPermaLink="false">1795</guid>
+      <link>https://ru.hexlet.io/courses/css-grid/lessons/element-position/theory_unit</link>
+      <description>Цель: Изучить свойства, позволяющие произвольно располагать элементы внутри сетки. Научиться именовать линии/области и использовать их при расположении элементов.</description>
+      <pubDate>Sun, 28 Jun 2020 11:02:47 -0400</pubDate>
+    </item>
+    <item>
+      <title>Первая сетка / CSS: Grid</title>
+      <guid isPermaLink="false">1794</guid>
+      <link>https://ru.hexlet.io/courses/css-grid/lessons/first-grid/theory_unit</link>
+      <description>Цель: Узнать о свойствах, позволяющие создавать сетки с помощью CSS Grid Layout. Создать первую 12 колоночную сетку. Познакомиться с единицами измерения fr</description>
+      <pubDate>Sun, 28 Jun 2020 11:02:40 -0400</pubDate>
+    </item>
+    <item>
+      <title>Терминология / CSS: Grid</title>
+      <guid isPermaLink="false">1792</guid>
+      <link>https://ru.hexlet.io/courses/css-grid/lessons/terminology/theory_unit</link>
+      <description>Цель: Познакомиться с понятиями сеток и их составлящими в CSS Grid Layout</description>
+      <pubDate>Sun, 28 Jun 2020 11:02:33 -0400</pubDate>
+    </item>
+    <item>
+      <title>Введение / CSS: Grid</title>
+      <guid isPermaLink="false">1793</guid>
+      <link>https://ru.hexlet.io/courses/css-grid/lessons/intro/theory_unit</link>
+      <description>Цель: Познакомиться с концепцией Grid. Узнать о ключевых моментах и отличиях от Flex</description>
+      <pubDate>Sun, 28 Jun 2020 11:02:26 -0400</pubDate>
+    </item>
+    <item>
+      <title>Аккумулятор / Python: Деревья</title>
+      <guid isPermaLink="false">1791</guid>
+      <link>https://ru.hexlet.io/courses/python-trees/lessons/accumulator/theory_unit</link>
+      <description>Цель: Научиться собирать дополнительные данные в процессе обхода дерева</description>
+      <pubDate>Thu, 11 Jun 2020 14:22:14 -0400</pubDate>
+    </item>
+    <item>
+      <title>Агрегация 2 / Python: Деревья</title>
+      <guid isPermaLink="false">1789</guid>
+      <link>https://ru.hexlet.io/courses/python-trees/lessons/calculate/theory_unit</link>
+      <description>Цель: Научиться получать составной (массив) результат обхода дерева</description>
+      <pubDate>Wed, 10 Jun 2020 03:49:46 -0400</pubDate>
+    </item>
+    <item>
+      <title>Агрегация / Python: Деревья</title>
+      <guid isPermaLink="false">1790</guid>
+      <link>https://ru.hexlet.io/courses/python-trees/lessons/aggregation/theory_unit</link>
+      <description>Цель: Научиться извлекать из дерева необходимые данные</description>
+      <pubDate>Wed, 10 Jun 2020 03:49:36 -0400</pubDate>
+    </item>
+    <item>
+      <title>Traversal / Python: Деревья</title>
+      <guid isPermaLink="false">1788</guid>
+      <link>https://ru.hexlet.io/courses/python-trees/lessons/traversal/theory_unit</link>
+      <description>Цель: Познакомиться с понятием "обход дерева"</description>
+      <pubDate>Wed, 10 Jun 2020 03:49:25 -0400</pubDate>
+    </item>
+  </channel>
+</rss>

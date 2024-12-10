@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode=development",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "playwright test",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
     "build": "webpack --mode=production",
@@ -43,6 +43,7 @@
   "dependencies": {
     "@eslint/config-array": "^0.19.1",
     "@eslint/object-schema": "^2.1.5",
+    "@playwright/test": "^1.49.1",
     "@popperjs/core": "^2.11.8",
     "ajv": "^8.17.1",
     "axios": "^1.7.9",
@@ -53,6 +54,7 @@
     "i18next-http-backend": "^3.0.1",
     "lodash": "^4.17.21",
     "on-change": "^5.0.1",
+    "playwright": "^1.49.1",
     "rimraf": "^6.0.1",
     "yup": "^1.5.0"
   }

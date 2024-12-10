@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Новые уроки на Хекслете</title>
+    <description>Практические уроки по программированию</description>
+    <link>https://ru.hexlet.io/</link>
+    <webMaster>info@hexlet.io</webMaster>
+    <item>
+      <title>Аккумулятор / Python: Деревья</title>
+      <guid isPermaLink="false">1791</guid>
+      <link>https://ru.hexlet.io/courses/python-trees/lessons/accumulator/theory_unit</link>
+      <description>Цель: Научиться собирать дополнительные данные в процессе обхода дерева</description>
+      <pubDate>Thu, 11 Jun 2020 14:22:14 -0400</pubDate>
+    </item>
+    <item>
+      <title>Агрегация 2 / Python: Деревья</title>
+      <guid isPermaLink="false">1789</guid>
+      <link>https://ru.hexlet.io/courses/python-trees/lessons/calculate/theory_unit</link>
+      <description>Цель: Научиться получать составной (массив) результат обхода дерева</description>
+      <pubDate>Wed, 10 Jun 2020 03:49:46 -0400</pubDate>
+    </item>
+    <item>
+      <title>Агрегация / Python: Деревья</title>
+      <guid isPermaLink="false">1790</guid>
+      <link>https://ru.hexlet.io/courses/python-trees/lessons/aggregation/theory_unit</link>
+      <description>Цель: Научиться извлекать из дерева необходимые данные</description>
+      <pubDate>Wed, 10 Jun 2020 03:49:36 -0400</pubDate>
+    </item>
+    <item>
+      <title>Traversal / Python: Деревья</title>
+      <guid isPermaLink="false">1788</guid>
+      <link>https://ru.hexlet.io/courses/python-trees/lessons/traversal/theory_unit</link>
+      <description>Цель: Познакомиться с понятием "обход дерева"</description>
+      <pubDate>Wed, 10 Jun 2020 03:49:25 -0400</pubDate>
+    </item>
+  </channel>
+</rss>
