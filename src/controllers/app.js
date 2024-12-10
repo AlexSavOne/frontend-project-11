@@ -1,5 +1,4 @@
 // src/controllers/app.js
-
 import i18next from '../locales/i18n.js';
 import createView from '../views/view.js';
 import { createState, markPostAsRead } from '../models/model.js';
@@ -36,7 +35,7 @@ const app = () => {
 
       const watchedState = createView(state, elements);
 
-      return withLoader(() => updateFeeds(state, fetchRSS, parseRSS))
+      return withLoader(() => updateFeeds(state, fetchRSS, parseRSS, watchedState.renderPosts))
         .then(() => {
           elements.form.addEventListener('submit', (e) => {
             handleFormSubmit(e, state, elements, watchedState)

@@ -38,7 +38,7 @@ const createView = (state, elements) => {
             'align-items-start',
             'border-0',
             'border-end-0',
-            postClass
+            postClass,
           );
           postItem.setAttribute('data-id', uniqueId);
 
