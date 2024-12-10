@@ -1,3 +1,5 @@
+// src\models\parseRSS.js
+
 const parseRSS = (rssText) => {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(rssText, 'text/xml');

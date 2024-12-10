@@ -1,3 +1,5 @@
+// src\models\model.js
+
 export const createState = () => ({
   feeds: [],
   posts: [],

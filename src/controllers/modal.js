@@ -1,8 +1,9 @@
+// src/controllers/modal.js
+
 const handlePostPreview = (state, elements, postId) => {
   const post = state.posts.find((p) => p.id === postId);
-  if (!post) {
-    return;
-  }
+
+  if (!post) return;
 
   const {
     modalTitle,
@@ -19,7 +20,11 @@ const handlePostPreview = (state, elements, postId) => {
 
   const postElement = postsList.querySelector(`[data-id="${postId}"]`);
   if (postElement) {
-    postElement.classList.replace('fw-bold', 'fw-normal');
+    const linkElement = postElement.querySelector('a');
+    if (linkElement) {
+      linkElement.classList.remove('fw-bold');
+      linkElement.classList.add('fw-normal', 'link-secondary');
+    }
   }
 };
 

@@ -1,3 +1,5 @@
+// src/controllers/form.js
+
 import onChange from 'on-change';
 import createSchema from '../models/validation.js';
 import fetchRSS from '../models/fetchRSS.js';
@@ -20,7 +22,7 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
     };
     elements.input.classList.add('is-invalid');
     showFeedbackMessage(elements, updatedWatchedState.form.error, true);
-    return updatedWatchedState;
+    return Promise.resolve(updatedWatchedState);
   }
 
   return schema
@@ -52,7 +54,6 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
     })
     .catch((error) => {
       elements.input.classList.add('is-invalid');
-
       const updatedWatchedState = onChange(watchedState, () => { });
       updatedWatchedState.form = {
         ...watchedState.form,

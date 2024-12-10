@@ -1,3 +1,5 @@
+// src/models/fetchRSS.js
+
 import axios from 'axios';
 
 const fetchRSS = (url) => {
