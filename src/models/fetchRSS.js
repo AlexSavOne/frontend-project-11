@@ -1,6 +1,7 @@
 // src/models/fetchRSS.js
 
 import axios from 'axios';
+import parseXML from '../utils/parseXML.js';
 
 const fetchRSS = (url) => {
   const proxyUrl = 'https://allorigins.hexlet.app/get?url=';
@@ -14,10 +15,9 @@ const fetchRSS = (url) => {
         throw new Error('Пустой ответ от сервера');
       }
 
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(contents, 'application/xml');
+      const xmlDoc = parseXML(contents);
 
-      if (xmlDoc.querySelector('parsererror') || !xmlDoc.querySelector('rss')) {
+      if (!xmlDoc.querySelector('rss')) {
         throw new Error('Ресурс не содержит валидный RSS');
       }
 

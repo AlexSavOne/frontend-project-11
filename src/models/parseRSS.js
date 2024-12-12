@@ -1,8 +1,9 @@
-// src\models\parseRSS.js
+// src/models/parseRSS.js
+
+import parseXML from '../utils/parseXML.js';
 
 const parseRSS = (rssText) => {
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(rssText, 'text/xml');
+  const xmlDoc = parseXML(rssText);
   const items = xmlDoc.querySelectorAll('item');
 
   if (!items.length) {
