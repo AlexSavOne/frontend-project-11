@@ -1,10 +1,9 @@
 // src/controllers/app.js
 import i18next from '../locales/i18n.js';
-import createView from '../views/view.js';
+import { createView, clearInputField, hideExampleText } from '../views/view.js';
 import { createState, markPostAsRead } from '../models/model.js';
 import updateFeeds from './updateFeeds.js';
 import handleFormSubmit from './form.js';
-import { clearInputField, hideExampleText } from './ui.js';
 import handlePostPreview from './modal.js';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';

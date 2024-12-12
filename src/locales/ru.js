@@ -1,3 +1,5 @@
+// src\locales\ru.js
+
 export default {
   translation: {
     languages: {

@@ -1,12 +1,16 @@
-// src/controllers/form.js
+/* eslint-disable no-param-reassign */
 
-import onChange from 'on-change';
 import createSchema from '../models/validation.js';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
 import i18next from '../locales/i18n.js';
-import { showFeedbackMessage } from './ui.js';
 import { withLoader } from '../utils/loader.js';
+import {
+  renderFeedbackMessage,
+  toggleInvalidInputClass,
+  hideExampleText,
+  showExampleText,
+} from '../views/view.js';
 
 const handleFormSubmit = (e, state, elements, watchedState) => {
   e.preventDefault();
@@ -14,21 +18,17 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
   const schema = createSchema(state.feeds.map((feed) => feed.url));
 
   if (!value.trim()) {
-    const updatedWatchedState = onChange(watchedState, () => { });
-    updatedWatchedState.form = {
-      ...watchedState.form,
-      error: i18next.t('validate.shouldNotBeEmpty'),
-      status: 'invalid',
-    };
-    elements.input.classList.add('is-invalid');
-    showFeedbackMessage(elements, updatedWatchedState.form.error, true);
-    return Promise.resolve(updatedWatchedState);
+    toggleInvalidInputClass(elements, true);
+    renderFeedbackMessage(elements, i18next.t('validate.shouldNotBeEmpty'), true);
+    showExampleText(elements);
+    return Promise.resolve(false);
   }
 
   return schema
     .validate({ url: value })
     .then(() => {
-      elements.input.classList.remove('is-invalid');
+      toggleInvalidInputClass(elements, false);
+      hideExampleText(elements);
       return withLoader(() => fetchRSS(value));
     })
     .then((rssText) => {
@@ -44,25 +44,18 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
         state.posts.push({ ...post, id: postId });
       });
 
-      const updatedWatchedState = onChange(watchedState, () => { });
-      updatedWatchedState.form.status = 'submitted';
-      updatedWatchedState.feeds = [...state.feeds];
-      updatedWatchedState.posts = [...state.posts];
+      watchedState.form.status = 'submitted';
+      watchedState.feeds = [...state.feeds];
+      watchedState.posts = [...state.posts];
 
-      showFeedbackMessage(elements, i18next.t('validate.successURL'), false);
-      return updatedWatchedState;
+      renderFeedbackMessage(elements, i18next.t('validate.successURL'), false);
+      return true;
     })
     .catch((error) => {
-      elements.input.classList.add('is-invalid');
-      const updatedWatchedState = onChange(watchedState, () => { });
-      updatedWatchedState.form = {
-        ...watchedState.form,
-        error: error.message || i18next.t('validate.networkError'),
-        status: 'invalid',
-      };
-
-      showFeedbackMessage(elements, updatedWatchedState.form.error, true);
-      return updatedWatchedState;
+      toggleInvalidInputClass(elements, true);
+      renderFeedbackMessage(elements, error.message || i18next.t('validate.networkError'), true);
+      showExampleText(elements);
+      return false;
     });
 };
 

@@ -1,5 +1,4 @@
 // src/utils/parseXML.js
-
 const parseXML = (xmlText) => {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xmlText, 'application/xml');

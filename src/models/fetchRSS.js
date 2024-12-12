@@ -1,7 +1,7 @@
 // src/models/fetchRSS.js
-
 import axios from 'axios';
 import parseXML from '../utils/parseXML.js';
+import i18next from '../locales/i18n.js';
 
 const fetchRSS = (url) => {
   const proxyUrl = 'https://allorigins.hexlet.app/get?url=';
@@ -12,22 +12,27 @@ const fetchRSS = (url) => {
       const { contents } = response.data;
 
       if (!contents) {
-        throw new Error('Пустой ответ от сервера');
+        throw new Error(i18next.t('validate.networkError'));
       }
 
-      const xmlDoc = parseXML(contents);
+      let xmlDoc;
+      try {
+        xmlDoc = parseXML(contents);
+      } catch (err) {
+        throw new Error(i18next.t('validate.urlShouldContainRSS'));
+      }
 
       if (!xmlDoc.querySelector('rss')) {
-        throw new Error('Ресурс не содержит валидный RSS');
+        throw new Error(i18next.t('validate.urlShouldContainRSS'));
       }
 
       return contents;
     })
-    .catch((error) => {
-      if (error.message.includes('Ресурс не содержит валидный RSS')) {
-        throw new Error('Ресурс не содержит валидный RSS');
+    .catch((err) => {
+      if (err.message === i18next.t('validate.urlShouldContainRSS')) {
+        throw new Error(i18next.t('validate.urlShouldContainRSS'));
       }
-      throw new Error('Ошибка сети или прокси');
+      throw new Error(i18next.t('validate.networkError'));
     });
 };
 
