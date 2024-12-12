@@ -2,17 +2,17 @@
 
 import onChange from 'on-change';
 
-const createView = (state, elements) => {
+const createView = (state, elements, i18nextInstance) => {
   const { feedsList, postsList } = elements;
 
   if (!feedsList || !postsList) {
-    throw new Error('Не удалось инициализировать представление. Проверьте селекторы.');
+    throw new Error(i18nextInstance.t('view.initError'));
   }
 
   return onChange(state, (path, value) => {
     if (path === 'feeds') {
-      feedsList.innerHTML = '<h2 class="card-title h4">Фиды</h2>';
-      postsList.innerHTML = '<h2 class="card-title h4">Посты</h2>';
+      feedsList.innerHTML = `<h2 class="card-title h4">${i18nextInstance.t('view.feedsTitle')}</h2>`;
+      postsList.innerHTML = `<h2 class="card-title h4">${i18nextInstance.t('view.postsTitle')}</h2>`;
 
       value.forEach((feed) => {
         const feedItem = document.createElement('div');
@@ -44,7 +44,7 @@ const createView = (state, elements) => {
 
           postItem.innerHTML = `
             <a href="${post.link}" target="_blank" rel="noopener noreferrer" class="fw-bold">${post.title}</a>
-            <button type="button" class="btn btn-outline-primary btn-sm preview-button" data-id="${uniqueId}" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>
+            <button type="button" class="btn btn-outline-primary btn-sm preview-button" data-id="${uniqueId}" data-bs-toggle="modal" data-bs-target="#modal">${i18nextInstance.t('validate.openPostPreview')}</button>
           `;
 
           postsList.appendChild(postItem);

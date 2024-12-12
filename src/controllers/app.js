@@ -33,7 +33,7 @@ const app = () => {
         }
       });
 
-      const watchedState = createView(state, elements);
+      const watchedState = createView(state, elements, i18next);
 
       return withLoader(() => updateFeeds(state, fetchRSS, parseRSS, watchedState.renderPosts))
         .then(() => {

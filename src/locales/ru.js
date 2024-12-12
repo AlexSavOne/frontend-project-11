@@ -1,5 +1,3 @@
-// src\locales\ru.js
-
 export default {
   translation: {
     languages: {
@@ -13,6 +11,11 @@ export default {
       shouldNotBeEmpty: 'Не должно быть пустым',
       openPostPreview: 'Просмотр',
       networkError: 'Ошибка сети',
+    },
+    view: {
+      feedsTitle: 'Фиды',
+      postsTitle: 'Посты',
+      initError: 'Не удалось инициализировать представление. Проверьте селекторы.',
     },
   },
 };
