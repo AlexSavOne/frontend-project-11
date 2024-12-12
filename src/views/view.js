@@ -10,8 +10,8 @@ const createView = (state, elements, i18nextInstance) => {
   }
 
   const renderPosts = () => {
-    feedsList.innerHTML = `<h2 class="card-title h3 mb-4">${i18nextInstance.t('view.feedsTitle')}</h2>`;
-    postsList.innerHTML = `<h2 class="card-title h3 mb-4">${i18nextInstance.t('view.postsTitle')}</h2>`;
+    feedsList.innerHTML = `<h2 class="card-title h4 mb-3">${i18nextInstance.t('view.feedsTitle')}</h2>`;
+    postsList.innerHTML = `<h2 class="card-title h4 mb-3">${i18nextInstance.t('view.postsTitle')}</h2>`;
 
     state.feeds.forEach((feed) => {
       const feedItem = document.createElement('div');
@@ -25,11 +25,6 @@ const createView = (state, elements, i18nextInstance) => {
       `;
 
       feedsList.appendChild(feedItem);
-
-      const postsHeader = document.createElement('h3');
-      postsHeader.classList.add('card-title', 'h5', 'mb-3');
-      postsHeader.textContent = feed.title;
-      postsList.appendChild(postsHeader);
 
       feed.posts.forEach((post, index) => {
         const uniqueId = `${feed.id}-${index}`;
