@@ -34,7 +34,9 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
     .then((rssText) => {
       const { title, description, posts } = parseRSS(rssText);
       const feedId = Date.now().toString();
-      const feed = { id: feedId, title, description, posts, url: value };
+      const feed = {
+        id: feedId, title, description, posts, url: value,
+      };
 
       state.feeds.push(feed);
       posts.forEach((post, index) => {

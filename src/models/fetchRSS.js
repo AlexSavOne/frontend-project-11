@@ -1,7 +1,5 @@
 // src/models/fetchRSS.js
-
 import axios from 'axios';
-import parseXML from '../utils/parseXML.js';
 import i18next from '../locales/i18n.js';
 
 const fetchRSS = (url) => {
@@ -11,28 +9,12 @@ const fetchRSS = (url) => {
   return axios.get(fullUrl)
     .then((response) => {
       const { contents } = response.data;
-
       if (!contents) {
         throw new Error(i18next.t('validate.networkError'));
       }
-
-      let xmlDoc;
-      try {
-        xmlDoc = parseXML(contents);
-      } catch {
-        throw new Error(i18next.t('validate.urlShouldContainRSS'));
-      }
-
-      if (!xmlDoc.querySelector('rss')) {
-        throw new Error(i18next.t('validate.urlShouldContainRSS'));
-      }
-
       return contents;
     })
-    .catch((error) => {
-      if (error.message === i18next.t('validate.urlShouldContainRSS')) {
-        throw new Error(i18next.t('validate.urlShouldContainRSS'));
-      }
+    .catch(() => {
       throw new Error(i18next.t('validate.networkError'));
     });
 };

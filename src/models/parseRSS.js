@@ -1,26 +1,33 @@
 // src/models/parseRSS.js
-
-import parseXML from '../utils/parseXML.js';
 import i18next from '../locales/i18n.js';
 
 const parseRSS = (rssText) => {
-  const xmlDoc = parseXML(rssText);
-  const items = xmlDoc.querySelectorAll('item');
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(rssText, 'application/xml');
 
-  if (!items.length) {
+  if (xmlDoc.querySelector('parsererror')) {
     throw new Error(i18next.t('validate.urlShouldContainRSS'));
   }
 
-  const posts = Array.from(items).map((item) => {
-    const title = item.querySelector('title')?.textContent || i18next.t('validate.noTitle');
-    const link = item.querySelector('link')?.textContent || '#';
-    const description = item.querySelector('description')?.textContent || i18next.t('validate.noDescription');
-    return { title, link, description };
-  });
-
   const channel = xmlDoc.querySelector('channel');
+  if (!channel) {
+    throw new Error(i18next.t('validate.urlShouldContainRSS'));
+  }
+
   const title = channel.querySelector('title')?.textContent || i18next.t('validate.noChannelTitle');
   const description = channel.querySelector('description')?.textContent || i18next.t('validate.noChannelDescription');
+  const items = channel.querySelectorAll('item');
+
+  if (!items.length) {
+    throw new Error(i18next.t('validate.noItems'));
+  }
+
+  const posts = Array.from(items).map((item, index) => ({
+    title: item.querySelector('title')?.textContent || i18next.t('validate.noTitle'),
+    link: item.querySelector('link')?.textContent || '#',
+    description: item.querySelector('description')?.textContent || i18next.t('validate.noDescription'),
+    id: `${Date.now()}-${index}`,
+  }));
 
   return { title, description, posts };
 };
