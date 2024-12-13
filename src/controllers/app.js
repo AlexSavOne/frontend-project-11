@@ -1,10 +1,11 @@
 // src/controllers/app.js
 import i18next from '../locales/i18n.js';
-import { createView, clearInputField, toggleExampleText } from '../views/view.js';
+import {
+  createView, clearInputField, toggleExampleText, renderModal,
+} from '../views/view.js';
 import { createState, markPostAsRead } from '../models/model.js';
 import updateFeeds from './updateFeeds.js';
 import handleFormSubmit from './form.js';
-import handlePostPreview from './modal.js';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
 import { showLoader, hideLoader } from '../utils/loader.js';
@@ -54,7 +55,7 @@ const app = () => {
         const postId = button.dataset.id;
         if (!postId) return;
 
-        handlePostPreview(state, elements, postId);
+        renderModal(state, postId, elements);
         markPostAsRead(state, postId);
         watchedState.readPosts = new Set(state.readPosts);
       };

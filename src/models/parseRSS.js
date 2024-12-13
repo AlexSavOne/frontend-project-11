@@ -14,18 +14,18 @@ const parseRSS = (rssText) => {
     throw new Error(i18next.t('validate.urlShouldContainRSS'));
   }
 
-  const title = channel.querySelector('title')?.textContent || i18next.t('validate.noChannelTitle');
-  const description = channel.querySelector('description')?.textContent || i18next.t('validate.noChannelDescription');
+  const title = channel.querySelector('title')?.textContent || '';
+  const description = channel.querySelector('description')?.textContent || '';
   const items = channel.querySelectorAll('item');
 
   if (!items.length) {
-    throw new Error(i18next.t('validate.noItems'));
+    throw new Error(i18next.t('validate.urlShouldContainRSS'));
   }
 
   const posts = Array.from(items).map((item, index) => ({
-    title: item.querySelector('title')?.textContent || i18next.t('validate.noTitle'),
+    title: item.querySelector('title')?.textContent || '',
     link: item.querySelector('link')?.textContent || '#',
-    description: item.querySelector('description')?.textContent || i18next.t('validate.noDescription'),
+    description: item.querySelector('description')?.textContent || '',
     id: `${Date.now()}-${index}`,
   }));
 

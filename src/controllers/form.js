@@ -5,7 +5,7 @@ import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
 import i18next from '../locales/i18n.js';
 import { showLoader, hideLoader } from '../utils/loader.js';
-import { renderFeedbackMessage, toggleExampleText } from '../views/view.js';
+import { renderFeedbackMessage, toggleExampleText, toggleInvalidInputClass } from '../views/view.js';
 
 const handleFormSubmit = (e, state, elements, watchedState) => {
   e.preventDefault();
@@ -17,6 +17,7 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
     watchedState.form.isError = true;
     renderFeedbackMessage(elements, watchedState.form.errorMessage, true);
     toggleExampleText(elements, true);
+    toggleInvalidInputClass(elements, true);
     return Promise.resolve(false);
   }
 
@@ -26,6 +27,7 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
       watchedState.form.isError = false;
       watchedState.form.errorMessage = '';
       renderFeedbackMessage(elements, '', false);
+      toggleInvalidInputClass(elements, false);
 
       showLoader();
 
@@ -48,7 +50,6 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
       watchedState.feeds = [...state.feeds];
       watchedState.posts = [...state.posts];
 
-      // Успешное сообщение
       watchedState.form.successMessage = i18next.t('validate.successURL');
       renderFeedbackMessage(elements, watchedState.form.successMessage, false);
       toggleExampleText(elements, true);
@@ -60,6 +61,7 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
       watchedState.form.errorMessage = error.message || i18next.t('validate.networkError');
       renderFeedbackMessage(elements, watchedState.form.errorMessage, true);
       toggleExampleText(elements, true);
+      toggleInvalidInputClass(elements, true);
       return false;
     })
     .finally(() => hideLoader());
