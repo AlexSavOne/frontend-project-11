@@ -1,5 +1,4 @@
 // src/views/view.js
-
 import onChange from 'on-change';
 
 const createView = (state, elements, i18nextInstance) => {
@@ -23,7 +22,6 @@ const createView = (state, elements, i18nextInstance) => {
           <p class="card-text m-0 small text-black-50">${feed.description}</p>
         </div>
       `;
-
       feedsList.appendChild(feedItem);
 
       feed.posts.forEach((post, index) => {
@@ -46,7 +44,6 @@ const createView = (state, elements, i18nextInstance) => {
           <a href="${post.link}" target="_blank" rel="noopener noreferrer" class="fw-bold">${post.title}</a>
           <button type="button" class="btn btn-outline-primary btn-sm preview-button" data-id="${uniqueId}" data-bs-toggle="modal" data-bs-target="#modal">${i18nextInstance.t('validate.openPostPreview')}</button>
         `;
-
         postsList.appendChild(postItem);
       });
     });
@@ -82,19 +79,11 @@ const clearInputField = (elements) => {
   input.value = '';
 };
 
-const hideExampleText = (elements) => {
+const toggleExampleText = (elements, isVisible) => {
   const { exampleText } = elements;
 
   if (exampleText) {
-    exampleText.style.opacity = '0';
-  }
-};
-
-const showExampleText = (elements) => {
-  const { exampleText } = elements;
-
-  if (exampleText) {
-    exampleText.style.opacity = '1';
+    exampleText.style.opacity = isVisible ? '1' : '0';
   }
 };
 
@@ -111,7 +100,6 @@ export {
   createView,
   renderFeedbackMessage,
   clearInputField,
-  hideExampleText,
-  showExampleText,
+  toggleExampleText,
   toggleInvalidInputClass,
 };

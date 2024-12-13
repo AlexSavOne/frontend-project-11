@@ -1,4 +1,4 @@
-// src\controllers\updateFeeds.js
+// src/controllers/updateFeeds.js
 
 const updateFeeds = (state, fetchRSS, parseRSS) => {
   const checkFeeds = () => {
@@ -13,16 +13,15 @@ const updateFeeds = (state, fetchRSS, parseRSS) => {
           if (newPosts.length > 0) {
             feed.posts.push(...newPosts);
           }
-        })
-        .catch(() => { });
+        });
     });
 
-    Promise.all(promises).finally(() => {
+    return Promise.all(promises).finally(() => {
       setTimeout(checkFeeds, 5000);
     });
   };
 
-  checkFeeds();
+  return checkFeeds();
 };
 
 export default updateFeeds;

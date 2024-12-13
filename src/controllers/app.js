@@ -1,19 +1,18 @@
 // src/controllers/app.js
 import i18next from '../locales/i18n.js';
-import { createView, clearInputField, hideExampleText } from '../views/view.js';
+import { createView, clearInputField, toggleExampleText } from '../views/view.js';
 import { createState, markPostAsRead } from '../models/model.js';
 import updateFeeds from './updateFeeds.js';
 import handleFormSubmit from './form.js';
 import handlePostPreview from './modal.js';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
-import { withLoader } from '../utils/loader.js';
+import { showLoader, hideLoader } from '../utils/loader.js';
 
 const app = () => {
   i18next.init()
     .then(() => {
       const state = createState();
-
       const elements = {
         form: document.querySelector('.rss-form'),
         input: document.querySelector('#url-input'),
@@ -28,37 +27,48 @@ const app = () => {
 
       Object.keys(elements).forEach((key) => {
         if (!elements[key]) {
-          throw new Error(`Элемент ${key} не найден! Проверьте разметку.`);
+          throw new Error(i18next.t('view.initError'));
         }
       });
 
       const watchedState = createView(state, elements, i18next);
 
-      return withLoader(() => updateFeeds(state, fetchRSS, parseRSS, watchedState.renderPosts))
-        .then(() => {
-          elements.form.addEventListener('submit', (e) => {
-            handleFormSubmit(e, state, elements, watchedState)
-              .then((isValid) => {
-                if (isValid) {
-                  clearInputField(elements);
-                  hideExampleText(elements);
-                }
-              });
-          });
+      const onFormSubmit = (e) => {
+        e.preventDefault();
+        showLoader();
 
-          elements.postsList.addEventListener('click', (e) => {
-            const button = e.target.closest('.preview-button');
-            if (!button) return;
+        handleFormSubmit(e, state, elements, watchedState)
+          .then((isValid) => {
+            if (isValid) {
+              clearInputField(elements);
+              toggleExampleText(elements, false);
+            }
+          })
+          .finally(() => hideLoader());
+      };
 
-            const postId = button.dataset.id;
-            if (!postId) return;
+      const onPostClick = (e) => {
+        const button = e.target.closest('.preview-button');
+        if (!button) return;
 
-            handlePostPreview(state, elements, postId);
-            markPostAsRead(state, postId);
+        const postId = button.dataset.id;
+        if (!postId) return;
 
-            watchedState.readPosts = new Set(state.readPosts);
-          });
-        });
+        handlePostPreview(state, elements, postId);
+        markPostAsRead(state, postId);
+        watchedState.readPosts = new Set(state.readPosts);
+      };
+
+      const onUpdateFeeds = () => {
+        updateFeeds(state, fetchRSS, parseRSS)
+          .finally(() => hideLoader());
+      };
+
+      elements.form.addEventListener('submit', onFormSubmit);
+      elements.postsList.addEventListener('click', onPostClick);
+
+      showLoader();
+      onUpdateFeeds();
     });
 };
 
