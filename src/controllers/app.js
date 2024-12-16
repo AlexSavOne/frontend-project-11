@@ -1,8 +1,6 @@
 // src/controllers/app.js
 import i18next from '../locales/i18n.js';
-import {
-  createView, clearInputField, toggleExampleText, renderModal,
-} from '../views/view.js';
+import createView from '../views/view.js';
 import { createState, markPostAsRead } from '../models/model.js';
 import updateFeeds from './updateFeeds.js';
 import handleFormSubmit from './form.js';
@@ -34,6 +32,13 @@ const app = () => {
 
       const watchedState = createView(state, elements, i18next);
 
+      const onUpdateFeeds = () => {
+        updateFeeds(state, fetchRSS, parseRSS, watchedState)
+          .finally(() => {
+            hideLoader();
+          });
+      };
+
       const onFormSubmit = (e) => {
         e.preventDefault();
         showLoader();
@@ -41,9 +46,11 @@ const app = () => {
         handleFormSubmit(e, state, elements, watchedState)
           .then((isValid) => {
             if (isValid) {
-              clearInputField(elements);
-              toggleExampleText(elements, false);
+              elements.input.value = '';
+              watchedState.renderPosts();
+              onUpdateFeeds();
             }
+            watchedState.toggleExampleText(!isValid);
           })
           .finally(() => hideLoader());
       };
@@ -53,23 +60,12 @@ const app = () => {
         if (!button) return;
 
         const postId = button.dataset.id;
-        if (!postId) return;
-
-        renderModal(state, postId, elements);
+        watchedState.renderModal(postId);
         markPostAsRead(state, postId);
-        watchedState.readPosts = new Set(state.readPosts);
-      };
-
-      const onUpdateFeeds = () => {
-        updateFeeds(state, fetchRSS, parseRSS)
-          .finally(() => hideLoader());
       };
 
       elements.form.addEventListener('submit', onFormSubmit);
       elements.postsList.addEventListener('click', onPostClick);
-
-      showLoader();
-      onUpdateFeeds();
     });
 };
 

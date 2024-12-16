@@ -10,17 +10,9 @@ const parseRSS = (rssText) => {
   }
 
   const channel = xmlDoc.querySelector('channel');
-  if (!channel) {
-    throw new Error(i18next.t('validate.urlShouldContainRSS'));
-  }
-
   const title = channel.querySelector('title')?.textContent || '';
   const description = channel.querySelector('description')?.textContent || '';
-  const items = channel.querySelectorAll('item');
-
-  if (!items.length) {
-    throw new Error(i18next.t('validate.urlShouldContainRSS'));
-  }
+  const items = channel.querySelectorAll('item') || [];
 
   const posts = Array.from(items).map((item, index) => ({
     title: item.querySelector('title')?.textContent || '',

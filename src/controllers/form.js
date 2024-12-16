@@ -5,19 +5,22 @@ import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
 import i18next from '../locales/i18n.js';
 import { showLoader, hideLoader } from '../utils/loader.js';
-import { renderFeedbackMessage, toggleExampleText, toggleInvalidInputClass } from '../views/view.js';
 
 const handleFormSubmit = (e, state, elements, watchedState) => {
   e.preventDefault();
   const { value } = elements.input;
   const schema = createSchema(state.feeds.map((feed) => feed.url));
 
+  if (!watchedState.form) {
+    watchedState.form = { isError: false, errorMessage: '' };
+  }
+
   if (!value.trim()) {
     watchedState.form.errorMessage = i18next.t('validate.shouldNotBeEmpty');
     watchedState.form.isError = true;
-    renderFeedbackMessage(elements, watchedState.form.errorMessage, true);
-    toggleExampleText(elements, true);
-    toggleInvalidInputClass(elements, true);
+    watchedState.renderFeedbackMessage(watchedState.form.errorMessage, true);
+    watchedState.toggleExampleText(true);
+    watchedState.toggleInvalidInputClass(true);
     return Promise.resolve(false);
   }
 
@@ -26,8 +29,8 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
     .then(() => {
       watchedState.form.isError = false;
       watchedState.form.errorMessage = '';
-      renderFeedbackMessage(elements, '', false);
-      toggleInvalidInputClass(elements, false);
+      watchedState.renderFeedbackMessage('', false);
+      watchedState.toggleInvalidInputClass(false);
 
       showLoader();
 
@@ -51,17 +54,17 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
       watchedState.posts = [...state.posts];
 
       watchedState.form.successMessage = i18next.t('validate.successURL');
-      renderFeedbackMessage(elements, watchedState.form.successMessage, false);
-      toggleExampleText(elements, true);
+      watchedState.renderFeedbackMessage(watchedState.form.successMessage, false);
+      watchedState.toggleExampleText(true);
 
       return true;
     })
     .catch((error) => {
       watchedState.form.isError = true;
       watchedState.form.errorMessage = error.message || i18next.t('validate.networkError');
-      renderFeedbackMessage(elements, watchedState.form.errorMessage, true);
-      toggleExampleText(elements, true);
-      toggleInvalidInputClass(elements, true);
+      watchedState.renderFeedbackMessage(watchedState.form.errorMessage, true);
+      watchedState.toggleExampleText(true);
+      watchedState.toggleInvalidInputClass(true);
       return false;
     })
     .finally(() => hideLoader());
