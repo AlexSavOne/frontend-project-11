@@ -37,9 +37,7 @@ const app = () => {
           .then((isValid) => {
             if (isValid) {
               elements.input.value = '';
-              watchedState.renderPosts();
             }
-            watchedState.toggleExampleText(!isValid);
           })
           .finally(() => {
             state.loading = 'success';

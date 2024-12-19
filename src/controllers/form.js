@@ -31,6 +31,7 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
       watchedState.form.errorMessage = '';
       watchedState.renderFeedbackMessage('', false);
       watchedState.toggleInvalidInputClass(false);
+      watchedState.toggleExampleText(false);
 
       showLoader();
 
@@ -55,7 +56,8 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
 
       watchedState.form.successMessage = i18next.t('validate.successURL');
       watchedState.renderFeedbackMessage(watchedState.form.successMessage, false);
-      watchedState.toggleExampleText(true);
+      watchedState.toggleExampleText(false);
+      watchedState.renderPosts();
 
       return true;
     })
