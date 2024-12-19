@@ -4,9 +4,6 @@ import createView from '../views/view.js';
 import { createState, markPostAsRead } from '../models/model.js';
 import updateFeeds from './updateFeeds.js';
 import handleFormSubmit from './form.js';
-import fetchRSS from '../models/fetchRSS.js';
-import parseRSS from '../models/parseRSS.js';
-import { showLoader, hideLoader } from '../utils/loader.js';
 
 const app = () => {
   i18next.init()
@@ -32,40 +29,35 @@ const app = () => {
 
       const watchedState = createView(state, elements, i18next);
 
-      const onUpdateFeeds = () => {
-        updateFeeds(state, fetchRSS, parseRSS, watchedState)
-          .finally(() => {
-            hideLoader();
-          });
-      };
-
       const onFormSubmit = (e) => {
         e.preventDefault();
-        showLoader();
+        state.loading = 'loading';
 
         handleFormSubmit(e, state, elements, watchedState)
           .then((isValid) => {
             if (isValid) {
               elements.input.value = '';
               watchedState.renderPosts();
-              onUpdateFeeds();
             }
             watchedState.toggleExampleText(!isValid);
           })
-          .finally(() => hideLoader());
+          .finally(() => {
+            state.loading = 'success';
+          });
       };
 
       const onPostClick = (e) => {
-        const button = e.target.closest('.preview-button');
-        if (!button) return;
+        const postId = e.target.dataset.id;
+        if (!postId) return;
 
-        const postId = button.dataset.id;
         watchedState.renderModal(postId);
         markPostAsRead(state, postId);
       };
 
       elements.form.addEventListener('submit', onFormSubmit);
       elements.postsList.addEventListener('click', onPostClick);
+
+      updateFeeds(watchedState);
     });
 };
 
