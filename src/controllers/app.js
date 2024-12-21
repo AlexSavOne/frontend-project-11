@@ -37,9 +37,7 @@ const app = () => {
           .then((isValid) => {
             if (isValid) {
               elements.input.value = '';
-              watchedState.renderPosts();
             }
-            watchedState.toggleExampleText(!isValid);
           })
           .finally(() => {
             state.loading = 'success';
@@ -50,7 +48,7 @@ const app = () => {
         const postId = e.target.dataset.id;
         if (!postId) return;
 
-        watchedState.renderModal(postId);
+        watchedState.modalId = postId;
         markPostAsRead(state, postId);
       };
 

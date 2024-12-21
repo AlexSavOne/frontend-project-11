@@ -8,39 +8,37 @@ import { showLoader, hideLoader } from '../utils/loader.js';
 
 const handleFormSubmit = (e, state, elements, watchedState) => {
   e.preventDefault();
-  const { value } = elements.input;
-  const schema = createSchema(state.feeds.map((feed) => feed.url));
 
-  if (!watchedState.form) {
-    watchedState.form = { isError: false, errorMessage: '' };
-  }
+  const formData = new FormData(elements.form);
+  const url = formData.get('url').trim();
 
-  if (!value.trim()) {
+  if (!url) {
     watchedState.form.errorMessage = i18next.t('validate.shouldNotBeEmpty');
     watchedState.form.isError = true;
-    watchedState.renderFeedbackMessage(watchedState.form.errorMessage, true);
-    watchedState.toggleExampleText(true);
-    watchedState.toggleInvalidInputClass(true);
+    watchedState.form.isExampleTextVisible = true;
+    watchedState.form.isInputInvalid = true;
     return Promise.resolve(false);
   }
 
+  const schema = createSchema(state.feeds.map((feed) => feed.url));
+
   return schema
-    .validate({ url: value })
+    .validate({ url })
     .then(() => {
       watchedState.form.isError = false;
       watchedState.form.errorMessage = '';
-      watchedState.renderFeedbackMessage('', false);
-      watchedState.toggleInvalidInputClass(false);
+      watchedState.form.isInputInvalid = false;
+      watchedState.form.isExampleTextVisible = false;
 
       showLoader();
 
-      return fetchRSS(value);
+      return fetchRSS(url);
     })
     .then((rssText) => {
       const { title, description, posts } = parseRSS(rssText);
       const feedId = Date.now().toString();
       const feed = {
-        id: feedId, title, description, posts, url: value,
+        id: feedId, title, description, posts, url,
       };
 
       state.feeds.push(feed);
@@ -49,25 +47,27 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
         state.posts.push({ ...post, id: postId });
       });
 
-      watchedState.form.status = 'submitted';
       watchedState.feeds = [...state.feeds];
       watchedState.posts = [...state.posts];
+      watchedState.form.status = 'submitted';
+      watchedState.form.isExampleTextVisible = false;
+      watchedState.form.feedbackMessage = i18next.t('validate.successURL');
+      watchedState.form.isError = false;
 
-      watchedState.form.successMessage = i18next.t('validate.successURL');
-      watchedState.renderFeedbackMessage(watchedState.form.successMessage, false);
-      watchedState.toggleExampleText(true);
-
+      elements.input.value = '';
       return true;
     })
     .catch((error) => {
       watchedState.form.isError = true;
       watchedState.form.errorMessage = error.message || i18next.t('validate.networkError');
-      watchedState.renderFeedbackMessage(watchedState.form.errorMessage, true);
-      watchedState.toggleExampleText(true);
-      watchedState.toggleInvalidInputClass(true);
+      watchedState.form.isExampleTextVisible = true;
+      watchedState.form.isInputInvalid = true;
       return false;
     })
-    .finally(() => hideLoader());
+    .finally(() => {
+      hideLoader();
+      state.loading = 'success';
+    });
 };
 
 export default handleFormSubmit;

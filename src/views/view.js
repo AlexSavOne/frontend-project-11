@@ -47,26 +47,19 @@ const createView = (state, elements, i18nextInstance) => {
     const post = state.posts.find((p) => p.id === postId);
     if (!post) return;
 
-    switch (postId) {
-      case postId: {
-        modalTitle.textContent = post.title;
-        modalBody.textContent = post.description || 'Описание отсутствует';
-        modalLink.href = post.link;
+    modalTitle.textContent = post.title;
+    modalBody.textContent = post.description || 'Описание отсутствует';
+    modalLink.href = post.link;
 
-        state.readPosts.add(postId);
+    state.readPosts.add(postId);
 
-        const postElement = postsList.querySelector(`[data-id="${postId}"]`);
-        if (postElement) {
-          const linkElement = postElement.querySelector('a');
-          if (linkElement) {
-            linkElement.classList.remove('fw-bold');
-            linkElement.classList.add('fw-normal', 'link-secondary');
-          }
-        }
-        break;
+    const postElement = postsList.querySelector(`[data-id="${postId}"]`);
+    if (postElement) {
+      const linkElement = postElement.querySelector('a');
+      if (linkElement) {
+        linkElement.classList.remove('fw-bold');
+        linkElement.classList.add('fw-normal', 'link-secondary');
       }
-      default:
-        break;
     }
   };
 
@@ -102,18 +95,32 @@ const createView = (state, elements, i18nextInstance) => {
     }
   };
 
-  return {
-    renderPosts,
-    renderModal,
-    renderFeedbackMessage,
-    toggleExampleText,
-    toggleInvalidInputClass,
-    onChange: onChange(state, (path) => {
-      if (path === 'feeds' || path === 'posts') {
+  return onChange(state, (path) => {
+    switch (path) {
+      case 'feeds':
+      case 'posts':
         renderPosts();
-      }
-    }),
-  };
+        break;
+      case 'modalId':
+        renderModal(state.modalId);
+        break;
+      case 'form.isError':
+      case 'form.errorMessage':
+        renderFeedbackMessage(state.form.errorMessage, state.form.isError);
+        break;
+      case 'form.feedbackMessage':
+        renderFeedbackMessage(state.form.feedbackMessage, false);
+        break;
+      case 'form.isExampleTextVisible':
+        toggleExampleText(state.form.isExampleTextVisible);
+        break;
+      case 'form.isInputInvalid':
+        toggleInvalidInputClass(state.form.isInputInvalid);
+        break;
+      default:
+        break;
+    }
+  });
 };
 
 export default createView;
