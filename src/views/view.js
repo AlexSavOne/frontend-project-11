@@ -48,7 +48,7 @@ const createView = (state, elements, i18nextInstance) => {
     if (!post) return;
 
     modalTitle.textContent = post.title;
-    modalBody.textContent = post.description || 'Описание отсутствует';
+    modalBody.textContent = post.description || i18nextInstance.t('view.initError');
     modalLink.href = post.link;
 
     state.readPosts.add(postId);

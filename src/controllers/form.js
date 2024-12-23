@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-import createSchema from '../models/validation.js';
+import validation from '../models/validation.js';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
 import i18next from '../locales/i18n.js';
@@ -12,18 +12,27 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
   const formData = new FormData(elements.form);
   const url = formData.get('url').trim();
 
+  state.form.valid = false;
+  state.form.error = null;
+  watchedState.form.isError = false;
+  watchedState.form.isExampleTextVisible = false;
+  watchedState.form.isInputInvalid = false;
+  watchedState.form.errorMessage = '';
+  watchedState.form.feedbackMessage = '';
+
   if (!url) {
-    watchedState.form.errorMessage = i18next.t('validate.shouldNotBeEmpty');
+    state.form.valid = false;
+    state.form.error = 'validate.shouldNotBeEmpty';
+    watchedState.form.errorMessage = i18next.t(state.form.error);
     watchedState.form.isError = true;
     watchedState.form.isExampleTextVisible = true;
     watchedState.form.isInputInvalid = true;
     return Promise.resolve(false);
   }
 
-  const schema = createSchema(state.feeds.map((feed) => feed.url));
+  watchedState.loadingProcess = 'pending';
 
-  return schema
-    .validate({ url })
+  return validation(url, state.feeds.map((feed) => feed.url))
     .then(() => {
       watchedState.form.isError = false;
       watchedState.form.errorMessage = '';
@@ -31,7 +40,6 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
       watchedState.form.isExampleTextVisible = false;
 
       showLoader();
-
       return fetchRSS(url);
     })
     .then((rssText) => {
@@ -55,11 +63,23 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
       watchedState.form.isError = false;
 
       elements.input.value = '';
+      watchedState.loadingProcess = 'finished';
+
       return true;
     })
     .catch((error) => {
       watchedState.form.isError = true;
-      watchedState.form.errorMessage = error.message || i18next.t('validate.networkError');
+
+      if (error.isAxiosError) {
+        watchedState.loadingProcess = 'error';
+        state.form.error = 'validate.networkError';
+      } else if (error.message === 'Invalid RSS') {
+        state.form.error = 'validate.urlShouldContainRSS';
+      } else {
+        state.form.error = `${error.message}` || 'validate.unknownError';
+      }
+
+      watchedState.form.errorMessage = i18next.t(state.form.error);
       watchedState.form.isExampleTextVisible = true;
       watchedState.form.isInputInvalid = true;
       return false;

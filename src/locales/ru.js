@@ -13,6 +13,7 @@ export default {
       shouldNotBeEmpty: 'Не должно быть пустым',
       openPostPreview: 'Просмотр',
       networkError: 'Ошибка сети',
+      unknownError: 'Неизвестная ошибка',
     },
     view: {
       feedsTitle: 'Фиды',

@@ -1,11 +1,21 @@
 // src/controllers/app.js
 import i18next from '../locales/i18n.js';
 import createView from '../views/view.js';
-import { createState, markPostAsRead } from '../models/model.js';
 import updateFeeds from './updateFeeds.js';
 import handleFormSubmit from './form.js';
 
 const app = () => {
+  const createState = () => ({
+    feeds: [],
+    posts: [],
+    readPosts: new Set(),
+    form: {
+      valid: true,
+      error: null,
+      loadingProcess: null,
+    },
+  });
+
   i18next.init()
     .then(() => {
       const state = createState();
@@ -29,31 +39,15 @@ const app = () => {
 
       const watchedState = createView(state, elements, i18next);
 
-      const onFormSubmit = (e) => {
-        e.preventDefault();
-        state.loading = 'loading';
+      elements.form.addEventListener('submit', (e) => handleFormSubmit(e, state, elements, watchedState));
 
-        handleFormSubmit(e, state, elements, watchedState)
-          .then((isValid) => {
-            if (isValid) {
-              elements.input.value = '';
-            }
-          })
-          .finally(() => {
-            state.loading = 'success';
-          });
-      };
-
-      const onPostClick = (e) => {
+      elements.postsList.addEventListener('click', (e) => {
         const postId = e.target.dataset.id;
         if (!postId) return;
 
         watchedState.modalId = postId;
-        markPostAsRead(state, postId);
-      };
-
-      elements.form.addEventListener('submit', onFormSubmit);
-      elements.postsList.addEventListener('click', onPostClick);
+        state.readPosts.add(postId);
+      });
 
       updateFeeds(watchedState);
     });
