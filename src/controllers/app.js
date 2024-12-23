@@ -5,7 +5,7 @@ import updateFeeds from './updateFeeds.js';
 import handleFormSubmit from './form.js';
 
 const app = () => {
-  const createState = () => ({
+  const state = {
     feeds: [],
     posts: [],
     readPosts: new Set(),
@@ -14,11 +14,10 @@ const app = () => {
       error: null,
       loadingProcess: null,
     },
-  });
+  };
 
   i18next.init()
     .then(() => {
-      const state = createState();
       const elements = {
         form: document.querySelector('.rss-form'),
         input: document.querySelector('#url-input'),
