@@ -1,5 +1,6 @@
 // src/controllers/updateFeeds.js
 /* eslint-disable no-param-reassign */
+import _ from 'lodash';
 import fetchRSS from '../models/fetchRSS.js';
 import parseRSS from '../models/parseRSS.js';
 
@@ -20,16 +21,17 @@ const updateFeeds = (watchedState) => {
           const freshPosts = newPosts.filter((post) => !existingPostLinks.has(post.link));
 
           if (freshPosts.length > 0) {
+            freshPosts.forEach((post, index) => {
+              post.id = _.uniqueId(`${feed.id}-post-${index}-`);
+            });
             feed.posts = [...posts, ...freshPosts];
           }
-        })
-        .catch(() => { });
+        });
     });
 
-    Promise.all(promises)
-      .finally(() => {
-        setTimeout(checkFeeds, 5000);
-      });
+    Promise.allSettled(promises).finally(() => {
+      setTimeout(checkFeeds, 5000);
+    });
   };
 
   checkFeeds();

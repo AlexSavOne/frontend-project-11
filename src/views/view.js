@@ -20,9 +20,8 @@ const createView = (state, elements, i18nextInstance) => {
         </div>`;
       feedsList.appendChild(feedItem);
 
-      feed.posts.forEach((post, index) => {
-        const uniqueId = `${feed.id}-${index}`;
-        const postClass = state.readPosts.has(uniqueId) ? 'fw-normal' : 'fw-bold';
+      state.posts.forEach((post) => {
+        const postClass = state.readPosts.has(post.id) ? 'fw-normal' : 'fw-bold';
         const postItem = document.createElement('li');
         postItem.classList.add(
           'list-group-item',
@@ -34,10 +33,12 @@ const createView = (state, elements, i18nextInstance) => {
           'mb-3',
           postClass,
         );
-        postItem.setAttribute('data-id', uniqueId);
+        postItem.setAttribute('data-id', post.id);
 
         postItem.innerHTML = `<a href="${post.link}" target="_blank" rel="noopener noreferrer" class="fw-bold">${post.title}</a>
-           <button type="button" class="btn btn-outline-primary btn-sm preview-button" data-id="${uniqueId}" data-bs-toggle="modal" data-bs-target="#modal">${i18nextInstance.t('validate.openPostPreview')}</button>`;
+        <button type="button" class="btn btn-outline-primary btn-sm preview-button" data-id="${post.id}" data-bs-toggle="modal" data-bs-target="#modal">
+          ${i18nextInstance.t('validate.openPostPreview')}
+        </button>`;
         postsList.appendChild(postItem);
       });
     });
@@ -95,6 +96,22 @@ const createView = (state, elements, i18nextInstance) => {
     }
   };
 
+  const showLoader = () => {
+    const loader = document.querySelector('#loader');
+    if (loader) {
+      loader.classList.remove('d-none');
+      loader.classList.add('d-flex');
+    }
+  };
+
+  const hideLoader = () => {
+    const loader = document.querySelector('#loader');
+    if (loader) {
+      loader.classList.remove('d-flex');
+      loader.classList.add('d-none');
+    }
+  };
+
   return onChange(state, (path) => {
     switch (path) {
       case 'feeds':
@@ -116,6 +133,13 @@ const createView = (state, elements, i18nextInstance) => {
         break;
       case 'form.isInputInvalid':
         toggleInvalidInputClass(state.form.isInputInvalid);
+        break;
+      case 'loadingProcess':
+        if (state.loadingProcess === 'pending') {
+          showLoader();
+        } else if (state.loadingProcess === 'fulfilled' || state.loadingProcess === 'rejected') {
+          hideLoader();
+        }
         break;
       default:
         break;

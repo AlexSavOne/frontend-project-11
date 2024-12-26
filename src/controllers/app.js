@@ -12,8 +12,9 @@ const app = () => {
     form: {
       valid: true,
       error: null,
-      loadingProcess: null,
+      status: 'idle',
     },
+    loadingProcess: null,
   };
 
   i18next.init()
