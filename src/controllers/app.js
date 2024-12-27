@@ -10,7 +10,7 @@ const app = () => {
     posts: [],
     readPosts: new Set(),
     form: {
-      valid: true,
+      valid: false,
       error: null,
       status: 'idle',
     },

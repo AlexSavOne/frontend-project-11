@@ -10,27 +10,29 @@ const handleFormSubmit = (e, state, elements, watchedState) => {
   const formData = new FormData(elements.form);
   const url = formData.get('url').trim();
 
-  watchedState.form.valid = false;
-  watchedState.form.error = null;
-
   return validation(url, state.feeds.map((feed) => feed.url))
     .then(() => {
-      watchedState.form.valid = true;
-      watchedState.loadingProcess = 'pending';
+      watchedState.form = {
+        ...watchedState.form,
+        valid: true,
+        error: null,
+      };
 
       fetchRSS(url, watchedState, state);
-      elements.input.value = '';
-      watchedState.loadingProcess = 'finished';
+      elements.form.reset();
       return true;
     })
     .catch((error) => {
-      watchedState.form.isError = true;
+      watchedState.form = {
+        ...watchedState.form,
+        isError: true,
+        valid: false,
+        error: i18next.t(error.message),
+      };
       if (error.message) {
         watchedState.form.errorMessage = i18next.t(error.message);
+        watchedState.form.isInputInvalid = true;
       }
-      watchedState.form.isExampleTextVisible = true;
-      watchedState.form.isInputInvalid = true;
-      watchedState.loadingProcess = 'rejected';
       return false;
     });
 };

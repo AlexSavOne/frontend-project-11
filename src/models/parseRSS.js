@@ -1,24 +1,24 @@
 // src/models/parseRSS.js
-import i18next from '../locales/i18n.js';
-
 const parseRSS = (rssText) => {
   const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(rssText, 'application/xml');
+  const parsedData = parser.parseFromString(rssText, 'application/xml');
 
-  if (xmlDoc.querySelector('parsererror')) {
-    throw new Error(i18next.t('validate.urlShouldContainRSS'));
+  const errorNode = parsedData.querySelector('parsererror');
+  if (errorNode) {
+    const error = new Error(errorNode.textContent);
+    error.isParsingError = true;
+    throw error;
   }
 
-  const channel = xmlDoc.querySelector('channel');
+  const channel = parsedData.querySelector('channel');
   const title = channel.querySelector('title')?.textContent || '';
   const description = channel.querySelector('description')?.textContent || '';
   const items = channel.querySelectorAll('item') || [];
 
-  const posts = Array.from(items).map((item, index) => ({
+  const posts = Array.from(items).map((item) => ({
     title: item.querySelector('title')?.textContent || '',
     link: item.querySelector('link')?.textContent || '#',
     description: item.querySelector('description')?.textContent || '',
-    id: `${Date.now()}-${index}`,
   }));
 
   return { title, description, posts };
